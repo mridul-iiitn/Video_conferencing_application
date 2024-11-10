@@ -7,7 +7,7 @@ import '@stream-io/video-react-sdk/dist/css/styles.css';
 import "react-datepicker/dist/react-datepicker.css";
 
 import { Toaster } from "@/components/ui/toaster"
-import { Toast, ToastProvider } from "@/components/ui/toast";
+//import { Toast, ToastProvider } from "@/components/ui/toast";
 
 export const metadata: Metadata = {
   title: "YOOM",
