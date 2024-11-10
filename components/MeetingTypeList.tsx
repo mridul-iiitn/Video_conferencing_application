@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use client';
 
 import { useState } from 'react';
@@ -11,21 +12,19 @@ import Loader from './Loader';
 import { Textarea } from './ui/textarea';
 import ReactDatePicker from 'react-datepicker';
 import { useToast } from './ui/use-toast';
-// import { Input } from './ui/input';
+import { Input } from './ui/input';
+
+const initialValues = {
+  dateTime: new Date(),
+  description: '',
+  link: '',
+};
 
 const MeetingTypeList = () => {
-    const router = useRouter();
-    const [meetingState, setMeetingState] = useState<
+  const router = useRouter();
+  const [meetingState, setMeetingState] = useState<
     'isScheduleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined
   >(undefined);
-
-  const initialValues = {
-    dateTime: new Date(),
-    description: '',
-    link: '',
-  };
-
-
   const [values, setValues] = useState(initialValues);
   const [callDetail, setCallDetail] = useState<Call>();
   const client = useStreamVideoClient();
@@ -54,55 +53,53 @@ const MeetingTypeList = () => {
         },
       });
       setCallDetail(call);
-
       if (!values.description) {
         router.push(`/meeting/${call.id}`);
       }
+      toast({
+        title: 'Meeting Created',
+      });
     } catch (error) {
-        console.error(error);
-        toast({ title: 'Failed to create Meeting' });
-      }
-    };
+      console.error(error);
+      toast({ title: 'Failed to create Meeting' });
+    }
+  };
 
-    if (!client || !user) return <Loader />;
+  if (!client || !user) return <Loader />;
 
-    const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${callDetail?.id}`;
-
-
-
+  const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${callDetail?.id}`;
 
   return (
-    <section className='grid grid-col-1 gap-5
-    md:grid-cols-2 xl:grid-cols-4'>
-        <HomeCard
+    <section className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <HomeCard
         img="/icons/add-meeting.svg"
         title="New Meeting"
         description="Start an instant meeting"
         handleClick={() => setMeetingState('isInstantMeeting')}
-        />
-        <HomeCard
+      />
+      <HomeCard
         img="/icons/join-meeting.svg"
         title="Join Meeting"
         description="via invitation link"
         className="bg-blue-1"
         handleClick={() => setMeetingState('isJoiningMeeting')}
-        />
-        <HomeCard
+      />
+      <HomeCard
         img="/icons/schedule.svg"
         title="Schedule Meeting"
         description="Plan your meeting"
         className="bg-purple-1"
         handleClick={() => setMeetingState('isScheduleMeeting')}
-        />
-        <HomeCard
+      />
+      <HomeCard
         img="/icons/recordings.svg"
         title="View Recordings"
         description="Meeting Recordings"
         className="bg-yellow-1"
         handleClick={() => router.push('/recordings')}
-        />
-        
-        {!callDetail ? (
+      />
+
+      {!callDetail ? (
         <MeetingModal
           isOpen={meetingState === 'isScheduleMeeting'}
           onClose={() => setMeetingState(undefined)}
@@ -152,7 +149,7 @@ const MeetingTypeList = () => {
         />
       )}
 
-      {/* <MeetingModal
+      <MeetingModal
         isOpen={meetingState === 'isJoiningMeeting'}
         onClose={() => setMeetingState(undefined)}
         title="Type the link here"
@@ -165,7 +162,7 @@ const MeetingTypeList = () => {
           onChange={(e) => setValues({ ...values, link: e.target.value })}
           className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
         />
-      </MeetingModal> */}
+      </MeetingModal>
 
       <MeetingModal
         isOpen={meetingState === 'isInstantMeeting'}
@@ -175,8 +172,8 @@ const MeetingTypeList = () => {
         buttonText="Start Meeting"
         handleClick={createMeeting}
       />
-    </section >
-  )
-}
+    </section>
+  );
+};
 
-export default MeetingTypeList
+export default MeetingTypeList;
